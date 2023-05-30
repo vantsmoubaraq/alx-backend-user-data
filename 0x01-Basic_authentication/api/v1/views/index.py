@@ -29,4 +29,4 @@ def stats() -> str:
 def not_authorized() -> str:
     """Execute the 401 error handler
     """
-    return abort(401)
+    abort(401)
