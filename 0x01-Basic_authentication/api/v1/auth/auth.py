@@ -4,7 +4,8 @@
 Module implements authentication class/ features
 """
 
-import requests
+from flask import request
+from typing import List, TypeVar
 
 
 class Auth:
@@ -12,13 +13,15 @@ class Auth:
     """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Checks excluded_paths and returns a boolean"""
-        pass
+        return False
 
     def authorization_header(self, request=None) -> str:
         """Checks authorization header"""
+        if request:
+            auth = request.headers.get("Authorization", None)
+            return auth
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
         """Handles user"""
-        
         return None
