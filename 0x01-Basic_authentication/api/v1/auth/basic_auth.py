@@ -73,7 +73,15 @@ class BasicAuth(Auth):
         """Basic authentication
         """
         header = self.authorization_header(request)
+        if not header:
+            return header
         value = self.extract_base64_authorization_header(header)
+        if not value:
+            return None
         decoded_str = self.decode_base64_authorization_header(value)
+        if not decoded_str:
+            return None
         email, pwd = self.extract_user_credentials(decoded_str)
+        if not email or not pwd:
+            return None
         return self.user_object_from_credentials(email, pwd)
