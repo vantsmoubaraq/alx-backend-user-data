@@ -6,6 +6,7 @@ Module implements authentication class/ features
 
 from flask import request
 from typing import List, TypeVar
+import re
 
 
 class Auth:
@@ -16,8 +17,12 @@ class Auth:
         if not path or not excluded_paths:
             return True
         if path:
-            if not path.endswith("/"):
-                path = path + "/"
+            if path.ends("*"):
+                for item in excluded_paths:
+                    if path[:-1] in item:
+                        path = item     
+            elif not path.endswith("/"):
+                path = path + "/"        
         if path in excluded_paths:
             return False
         return True
