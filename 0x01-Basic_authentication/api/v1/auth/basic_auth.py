@@ -74,7 +74,7 @@ class BasicAuth(Auth):
         """
         header = self.authorization_header(request)
         if not header:
-            return header
+            return None
         value = self.extract_base64_authorization_header(header)
         if not value:
             return None
