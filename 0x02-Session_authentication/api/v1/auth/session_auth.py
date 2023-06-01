@@ -1,43 +1,60 @@
 #!/usr/bin/env python3
+
 """
-A session athentication module
+SessionAuth module
 """
-from uuid import uuid4
+
 from api.v1.auth.auth import Auth
+from typing import TypeVar
+from uuid import uuid4
 from models.user import User
 
 
 class SessionAuth(Auth):
-    """ session authentication
+    """
+    SessionAuth class.
     """
     user_id_by_session_id = {}
 
     def create_session(self, user_id: str = None) -> str:
-        """ create session """
-        if user_id is None:
-            return None
-        if not isinstance(user_id, str):
-            return None
-        sessionId = uuid4()
-        self.user_id_by_session_id[sessionId] = user_id
-        return sessionId
+        """
+        create_session.
+        """
+        if not user_id or type(user_id) != str:
+            return
+        session_id = str(uuid4())
+        SessionAuth.user_id_by_session_id[session_id] = user_id
+        return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
-        """ user_id """
-        if session_id is None:
-            return None
-        if isinstance(session_id, str):
-            return None
+        """
+        user_id_for_session_id.
+        """
+        if not session_id or type(session_id) != str:
+            return
         return SessionAuth.user_id_by_session_id.get(session_id, None)
 
-    def current_user(self, request=None) -> str:
-        """ return the current user
+    def current_user(self, request=None) -> TypeVar('User'):
         """
-        if request is None:
-            return None
-        cookie = self.session_cookie(request)
-        if cookie is None:
-            return None
-        user_id = self.user_id_for_session_id(cookie)
-        return User.get(user_id)
-        
+        current_user.
+        """
+        if request:
+            session_cookie = self.session_cookie(request)
+            if session_cookie:
+                user_id = self.user_id_for_session_id(session_cookie)
+                return User.get(user_id)
+
+    def destroy_session(self, request=None) -> bool:
+        """
+        destroy_session.
+        """
+        if not request:
+            return False
+        session_cookie = self.session_cookie(request)
+        if not session_cookie:
+            return False
+        user_id = self.user_id_for_session_id(session_cookie)
+        if not user_id:
+            return False
+        self.user_id_by_session_id.pop(session_cookie, None)
+        return True
