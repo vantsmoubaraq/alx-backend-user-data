@@ -47,12 +47,12 @@ class DB:
         """find user
         """
         try:
-            user = self._session.query(User).filter_by(**kwargs).one()
-            return user
-        except NoResultFound:
-            raise NoResultFound
+            user = self._session.query(User).filter_by(**kwargs).first()
         except InvalidRequestError:
             raise InvalidRequestError
+        if user is None:
+            raise NoResultFound
+        return user
 
     def update_user(self, user_id: str, **kwargs: Dict) -> None:
         """updates user
@@ -63,6 +63,5 @@ class DB:
                 raise ValueError
             else:
                 setattr(user, key, value)
-        self._session.add(user)
         self._session.commit()
         return None
