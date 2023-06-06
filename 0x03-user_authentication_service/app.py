@@ -47,5 +47,20 @@ def login():
         abort(401)
 
 
+@app.route("/logout", methods=["DELETE"])
+def logout():
+    """Logs user out"""
+    session_id = request.cookies.get("session_id")
+    try:
+        user = self._db.find_user_by(session_id=session_id)
+        if user:
+            AUTH.destroy_session(user.id)
+            form()
+        else:
+            abort(403)
+    except Exception:
+        pass
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
