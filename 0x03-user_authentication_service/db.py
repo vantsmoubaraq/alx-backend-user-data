@@ -43,7 +43,7 @@ class DB:
         self._session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs: Any) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """find user
         """
         try:
@@ -61,5 +61,6 @@ class DB:
         for key, value in kwargs.items():
             if not hasattr(user, key):
                 raise ValueError
-            setattr(user, key, value)
+            else:
+                setattr(user, key, value)
         self._session.commit()
