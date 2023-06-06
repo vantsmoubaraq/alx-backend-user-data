@@ -9,6 +9,7 @@ from user import Base
 from user import User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from typing import Dict
 
 
 class DB:
@@ -40,7 +41,7 @@ class DB:
         self._session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs: Dict) -> User:
         """find user
         """
         try:
@@ -51,7 +52,7 @@ class DB:
         except InvalidRequestError:
             raise InvalidRequestError
 
-    def update_user(self, user_id, **kwargs):
+    def update_user(self, user_id: str, **kwargs: Dict) -> None:
         """updates user
         """
         user = self.find_user_by(id=user_id)

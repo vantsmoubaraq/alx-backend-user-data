@@ -5,6 +5,7 @@
 
 import bcrypt
 from db import DB
+from user import User
 
 
 def _hash_password(password: str) -> bcrypt:
@@ -20,6 +21,6 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, password: str):
+    def register_user(self, email: str, password: str) -> User:
         """Registers new user if not exist"""
         pass
