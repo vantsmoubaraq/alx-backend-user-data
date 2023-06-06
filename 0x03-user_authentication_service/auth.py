@@ -12,7 +12,7 @@ from sqlalchemy.orm.exc import NoResultFound
 def _hash_password(password: str) -> bcrypt:
     """Encrypts password"""
     salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
+    hashed_password = bcrypt.hashpw(password.encode(), salt)
     return hashed_password
 
 
