@@ -54,7 +54,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: str, **kwargs) -> None:
+    def update_user(self, user_id: str, **kwargs: Any) -> None:
         """updates user
         """
         user = self.find_user_by(id=user_id)
