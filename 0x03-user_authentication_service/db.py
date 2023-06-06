@@ -43,7 +43,7 @@ class DB:
         self._session.commit()
         return new_user
 
-    def find_user_by(self, **kwargs: Dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """find user
         """
         try:
@@ -54,7 +54,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: str, **kwargs: Dict) -> None:
+    def update_user(self, user_id: str, **kwargs) -> None:
         """updates user
         """
         user = self.find_user_by(id=user_id)
