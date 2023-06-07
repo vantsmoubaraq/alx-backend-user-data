@@ -4,6 +4,7 @@
 """
 
 from flask import Flask, jsonify, request, abort, make_response
+from flask import redirect, url_for
 from auth import Auth
 import json
 
@@ -55,7 +56,7 @@ def logout():
         user = self._db.find_user_by(session_id=session_id)
         if user:
             AUTH.destroy_session(user.id)
-            form()
+            return redirect(url_for("form"))
         else:
             abort(403)
     except Exception:
