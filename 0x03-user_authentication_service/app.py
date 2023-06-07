@@ -53,7 +53,7 @@ def logout():
     """Logs user out"""
     session_id = request.cookies.get("session_id")
     try:
-        user = self._db.find_user_by(session_id=session_id)
+        user = AUTH.get_user_from_session_id(session_id)
         if user:
             AUTH.destroy_session(user.id)
             return redirect('/')
