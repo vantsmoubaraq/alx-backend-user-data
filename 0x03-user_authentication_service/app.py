@@ -51,7 +51,7 @@ def login():
 @app.route("/logout", methods=["DELETE"])
 def logout():
     """Logs user out"""
-    session_id = request.cookies.get("session_id")
+    session_id = request.cookies.get("session_id", None)
     try:
         user = AUTH.get_user_from_session_id(session_id)
         if user:
@@ -66,7 +66,7 @@ def logout():
 @app.route("/profile", methods=["GET"], strict_slashes=False)
 def profile():
     """Returns user profile"""
-    session_id = request.form.get("session_id")
+    session_id = request.cookies.get("session_id", None)
     user = AUTH.get_user_from_session_id(session_id)
     if user:
         return jsonify({"email": user.email}), 200
