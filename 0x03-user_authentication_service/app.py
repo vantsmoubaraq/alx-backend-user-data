@@ -56,7 +56,7 @@ def logout():
         user = self._db.find_user_by(session_id=session_id)
         if user:
             AUTH.destroy_session(user.id)
-            return redirect('/'))
+            return redirect('/')
         else:
             abort(403)
     except Exception:
