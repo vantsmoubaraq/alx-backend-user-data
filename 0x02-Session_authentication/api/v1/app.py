@@ -15,7 +15,7 @@ app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 excluded_paths = ['/api/v1/status/', '/api/v1/unauthorized/',
-                  '/api/v1/forbidden/']
+                  '/api/v1/forbidden/', "/api/v1/auth_session/login/"]
 
 authenticated = getenv("AUTH_TYPE")
 
@@ -23,9 +23,12 @@ if authenticated:
     if authenticated == "basic_auth":
         from api.v1.auth.basic_auth import BasicAuth
         auth = BasicAuth()
-    else:
+    elif authenticated == "auth":
         from api.v1.auth.auth import Auth
         auth = Auth()
+    else:
+        from api.v1.auth.session_auth import SessionAuth
+        auth = SessionAuth()
 
 
 @app.before_request
@@ -39,6 +42,10 @@ def filter():
         abort(401)
     elif auth.current_user(request) is None:
         abort(403)
+    elif auth.authorization_header(request) and auth.session_cookie(request):
+        return None, abort(401)
+    else:
+        request.current_user = auth.current_user(request)
 
 
 @app.errorhandler(404)

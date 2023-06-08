@@ -7,6 +7,7 @@ Module implements authentication class/ features
 from flask import request
 from typing import List, TypeVar
 import re
+from os import getenv, environ
 
 
 class Auth:
@@ -17,7 +18,7 @@ class Auth:
         if not path or not excluded_paths:
             return True
         if path:
-            if path.ends("*"):
+            if path.endswith("*"):
                 for item in excluded_paths:
                     if path[:-1] in item:
                         path = item
@@ -37,3 +38,15 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """Handles user"""
         return None
+
+    def session_cookie(self, request=None):
+        """returns value of a cookie from a dictionary"""
+        if request is None:
+            return None
+        try:
+            _my_session_id = request.cookies.get("_my_session_id")
+            environ["SESSION_NAME"] =  _my_session_id
+            return _my_session_id 
+        except Exception:
+            pass
+        

@@ -1,7 +1,9 @@
-Learning Objectives
-At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+# 0x03. User authentication service
 
-How to declare API routes in a Flask app
-How to get and set cookies
-How to retrieve request form data
-How to return various HTTP status codes
+* Allowed editors: vi, vim, emacs
+* You should use SQLAlchemy 1.3.x
+* The flask app should only interact with Auth and never with DB directly.
+
+You will need to install [bcrypt](https://pypi.org/project/bcrypt/)
+
+``` pip3 install bcrypt ```

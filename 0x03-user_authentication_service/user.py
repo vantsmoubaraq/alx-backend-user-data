@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-
-"""create user model using sqlalchemy"""
-
+"""
+SQLAlchemy model: User model
+"""
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
-import bcrypt
 
 Base = declarative_base()
 
 
 class User(Base):
-    """Implement user table"""
-    __tablename__ = "users"
+    """
+    User model class
+    """
+
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
     email = Column(String(250), nullable=False)

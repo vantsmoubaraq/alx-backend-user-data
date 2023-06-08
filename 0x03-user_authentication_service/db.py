@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-
 """DB module
 """
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-
-from user import Base
-from user import User
+from user import Base, User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
-from typing import Dict
+
+VALID_FIELDS = ['id', 'email', 'hashed_password', 'session_id',
+                'reset_token']
 
 
 class DB:
@@ -36,31 +35,31 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """add user to database
+        """ Add user to the database
         """
-        new_user = User(email=email, hashed_password=hashed_password)
-        self._session.add(new_user)
+        if not email or not hashed_password:
+            return
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
         self._session.commit()
-        return new_user
+        return user
 
     def find_user_by(self, **kwargs) -> User:
-        """find user
+        """ Find user by key_pairs arguements
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-            if user is None:
-                raise NoResultFound
-            return user
-        except InvalidRequestError:
+        if not kwargs or not self.valid_query_args(**kwargs):
             raise InvalidRequestError
+        try:
+            return self._session.query(User).filter_by(**kwargs).one()
+        except Exception:
+            raise NoResultFound
 
-    def update_user(self, user_id: str, **kwargs) -> None:
-        """updates user
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update user based on user ID
         """
         user = self.find_user_by(id=user_id)
-        for key, value in kwargs.items():
-            if not hasattr(user, key):
+        for k, v in kwargs.items():
+            if k not in VALID_FIELDS:
                 raise ValueError
-            else:
-                setattr(user, key, value)
+            setattr(user, k, v)
         self._session.commit()
