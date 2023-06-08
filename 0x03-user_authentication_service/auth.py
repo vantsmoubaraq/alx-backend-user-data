@@ -91,7 +91,8 @@ class Auth:
             if not user:
                 raise ValueError
             else:
-                user.reset_token = _generate_uuid()
-                return user.reset_token
+                reset_token = _generate_uuid()
+                user.reset_token = reset_token
+                return reset_token
         except Exception:
             pass
