@@ -80,7 +80,7 @@ class Auth:
         try:
             user = self._db.find_user_by(id=user_id)
             if user:
-                user.session_id = None
+                self._db.update_user(user_id=user.id, session_id=None)
         except Exception:
             pass
 
@@ -92,7 +92,21 @@ class Auth:
                 raise ValueError
             else:
                 reset_token = _generate_uuid()
-                user.reset_token = reset_token
+                self._db.update_user(user_id=user.id, reset_token=reset_token)
                 return reset_token
+        except Exception:
+            pass
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """Updates password"""
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            if not user:
+                raise ValueError
+            else:
+                hashed_password = _hash_password(password)
+                self._db.update_user(user_id=user.id,
+                                     hashed_password=hashed_password,
+                                     reset_token=None)
         except Exception:
             pass
